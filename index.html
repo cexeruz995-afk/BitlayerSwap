@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitlayerSwap – Bitcoin L2 DEX | Swap & Bridge BTC Native Assets</title>
+<meta name="description" content="BitlayerSwap is the leading DEX on Bitlayer — Bitcoin's fastest L2. Swap BTC-native assets, bridge from Bitcoin mainnet, and trade with the security of Bitcoin. Connect wallet now.">
+<meta name="keywords" content="BitlayerSwap, Bitlayer DEX, Bitcoin L2 swap, BTC DEX, Bitlayer bridge, Bitcoin Layer 2, swap BTC, bitlayer DeFi, BBTC swap, Bitcoin DeFi">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="BitlayerSwap – The Native Bitcoin L2 DEX">
+<meta property="og:description" content="Swap BTC-native assets on Bitlayer L2. Bridge from Bitcoin. Zero trust assumptions.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BitlayerSwap | Bitcoin L2 DEX">
+<link rel="canonical" href="https://bitlayerswap.io/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FF6B00'/%3E%3Cstop offset='100%25' stop-color='%23FF9A00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='6' fill='%230A0500'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='url(%23g)' stroke-width='2'/%3E%3Ctext x='50%25' y='56%25' font-family='serif' font-weight='900' font-size='28' fill='url(%23g)' text-anchor='middle' dominant-baseline='middle'%3E₿%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FF6B00;
+  --orange2: #FF9A00;
+  --orange3: #FFB84D;
+  --amber: #FFCC00;
+  --red: #FF2D00;
+  --bg: #060300;
+  --bg2: #090400;
+  --bg3: #0D0600;
+  --surface: rgba(255,107,0,0.05);
+  --border: rgba(255,107,0,0.15);
+  --border2: rgba(255,107,0,0.08);
+  --text: #FFE8CC;
+  --muted: rgba(255,232,204,0.35);
+  --white: #FFF5E8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+::selection { background: var(--orange); color: #000; }
+
+.cur { position:fixed; width:6px; height:6px; background:var(--orange); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); box-shadow:0 0 10px var(--orange),0 0 20px rgba(255,107,0,0.4); }
+.cur-r { position:fixed; width:28px; height:28px; border:1px solid rgba(255,107,0,0.5); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:transform .1s ease,width .2s,height .2s,border-color .2s; }
+
+canvas#c { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+.scan { position:fixed; inset:0; z-index:1; pointer-events:none; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,107,0,0.01) 2px,rgba(255,107,0,0.01) 4px); }
+
+nav {
+  position: fixed;
+  top:0; left:0; right:0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 56px;
+  background: rgba(6,3,0,0.8);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-btc {
+  width: 34px; height: 34px;
+  border: 1.5px solid var(--orange);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--orange);
+  font-weight: 900;
+  box-shadow: 0 0 14px rgba(255,107,0,0.3);
+  animation: btcPulse 3s ease-in-out infinite;
+}
+
+@keyframes btcPulse {
+  0%,100% { box-shadow:0 0 14px rgba(255,107,0,0.3); }
+  50% { box-shadow:0 0 28px rgba(255,107,0,0.6); }
+}
+
+.logo-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+.logo-name .b { color:var(--orange); text-shadow:0 0 12px rgba(255,107,0,0.5); }
+.logo-name .s { color:var(--text); }
+
+.nav-links { display:flex; gap:32px; list-style:none; }
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  position: relative;
+}
+.nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:1px; background:var(--orange); box-shadow:0 0 6px var(--orange); transform:scaleX(0); transition:transform .2s; }
+.nav-links a:hover { color:var(--orange3); }
+.nav-links a:hover::after { transform:scaleX(1); }
+
+.btn-nav {
+  background: transparent;
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  padding: 10px 22px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: none;
+  transition: all 0.25s;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+.btn-nav::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,107,0,0.15),transparent); opacity:0; transition:opacity .25s; }
+.btn-nav:hover { box-shadow:0 0 24px rgba(255,107,0,0.35); text-shadow:0 0 8px var(--orange); }
+.btn-nav:hover::before { opacity:1; }
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 72px;
+  padding: 120px 56px 80px;
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+
+.hero-left {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-width: 280px;
+  max-width: 540px;
+}
+
+.h-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--orange);
+  border: 1px solid rgba(255,107,0,0.25);
+  padding: 6px 14px;
+  margin-bottom: 24px;
+  background: rgba(255,107,0,0.04);
+  animation: fadeUp .7s ease both;
+}
+
+.h-dot { width:6px; height:6px; border-radius:50%; background:var(--orange); box-shadow:0 0 8px var(--orange); animation:blink 1.2s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(44px, 6vw, 78px);
+  line-height: 0.92;
+  margin-bottom: 20px;
+  animation: fadeUp .7s .1s ease both;
+}
+
+.ht1 { display:block; color:var(--white); }
+.ht2 {
+  display: block;
+  background: linear-gradient(90deg, var(--orange), var(--orange2), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 24px rgba(255,107,0,0.5));
+  animation: fadeUp .7s .1s ease both, orangeGlow 4s ease-in-out infinite;
+}
+
+@keyframes orangeGlow {
+  0%,100% { filter:drop-shadow(0 0 24px rgba(255,107,0,0.5)); }
+  50% { filter:drop-shadow(0 0 48px rgba(255,154,0,0.8)); }
+}
+
+.ht3 { display:block; color:var(--muted); font-weight:500; font-size:clamp(24px,3vw,40px); letter-spacing:2px; }
+
+.hero-desc {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--muted);
+  max-width: 420px;
+  margin-bottom: 36px;
+  letter-spacing: 0.3px;
+  animation: fadeUp .7s .2s ease both;
+}
+
+.hero-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+  animation: fadeUp .7s .3s ease both;
+}
+
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid rgba(255,107,0,0.2);
+  color: var(--muted);
+  background: rgba(255,107,0,0.03);
+}
+
+.hero-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  animation: fadeUp .7s .4s ease both;
+}
+
+.btn-orange {
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  color: #000;
+  border: none;
+  padding: 14px 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: none;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+}
+.btn-orange::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,0.15); transform:translateX(-100%) skewX(-15deg); transition:transform .4s; }
+.btn-orange:hover::after { transform:translateX(120%) skewX(-15deg); }
+.btn-orange:hover { box-shadow:0 8px 32px rgba(255,107,0,0.45); transform:translateY(-2px); }
+
+.btn-outline-o {
+  background: transparent;
+  border: 1px solid rgba(255,107,0,0.4);
+  color: var(--orange);
+  padding: 14px 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: none;
+  transition: all 0.3s;
+  clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+}
+.btn-outline-o:hover { background:rgba(255,107,0,0.08); border-color:var(--orange); box-shadow:0 8px 24px rgba(255,107,0,0.2); transform:translateY(-2px); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+.swap-panel {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  width: 400px;
+  animation: fadeUp .7s .15s ease both;
+}
+
+.panel {
+  background: rgba(6,3,0,0.88);
+  border: 1px solid var(--border);
+  position: relative;
+  backdrop-filter: blur(20px);
+}
+
+.panel::before { content:''; position:absolute; top:0; left:12%; right:12%; height:1px; background:linear-gradient(90deg,transparent,var(--orange),transparent); box-shadow:0 0 10px var(--orange); }
+
+.panel-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border2);
+  padding: 0 24px;
+}
+
+.ptab {
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: none;
+  transition: all .2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.ptab.active { color:var(--orange); border-bottom-color:var(--orange); text-shadow:0 0 8px rgba(255,107,0,0.5); }
+.ptab:hover { color:var(--orange3); }
+
+.panel-body { padding: 24px; }
+
+.tk-box {
+  background: rgba(255,107,0,0.03);
+  border: 1px solid var(--border2);
+  padding: 14px 18px;
+  margin-bottom: 4px;
+  transition: border-color .2s;
+}
+.tk-box:hover { border-color:rgba(255,107,0,0.3); }
+
+.tk-label { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:8px; }
+
+.tk-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+
+.tk-sel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--border2);
+  background: rgba(255,107,0,0.06);
+  cursor: none;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.tk-sel:hover { border-color:rgba(255,107,0,0.4); }
+
+.tk-dot { width:18px; height:18px; border-radius:50%; flex-shrink:0; }
+.tk-sym { font-family:'Orbitron',sans-serif; font-weight:700; font-size:12px; color:var(--text); }
+.tk-arr { color:var(--muted); font-size:9px; }
+
+.tk-inp {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  color: var(--orange3);
+  background: none;
+  border: none;
+  outline: none;
+  width: 110px;
+  text-align: right;
+  letter-spacing: 1px;
+}
+.tk-inp::placeholder { color:rgba(255,107,0,0.15); }
+.tk-usd { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); display:block; text-align:right; margin-top:3px; }
+
+.swap-mid {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0;
+}
+
+.swap-flip {
+  width: 34px; height: 34px;
+  border: 1px solid var(--border);
+  background: rgba(255,107,0,0.06);
+  display: flex; align-items:center; justify-content:center;
+  color: var(--orange);
+  font-size: 16px;
+  cursor: none;
+  transition: all .3s;
+}
+.swap-flip:hover { border-color:var(--orange); transform:rotate(180deg); box-shadow:0 0 14px rgba(255,107,0,0.25); }
+
+.swap-details {
+  margin: 14px 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.sd-row { display:flex; justify-content:space-between; }
+.sdk { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); }
+.sdv { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--text); }
+.sdv.g { color:#00FF94; text-shadow:0 0 6px rgba(0,255,148,0.4); }
+
+.btn-swap-main {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(255,107,0,0.12), rgba(255,154,0,0.08));
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  padding: 15px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: none;
+  transition: all .3s;
+  margin-top: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-swap-main::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,107,0,0.2),rgba(255,154,0,0.15)); opacity:0; transition:opacity .3s; }
+.btn-swap-main:hover::before { opacity:1; }
+.btn-swap-main:hover { box-shadow:0 0 36px rgba(255,107,0,0.3); text-shadow:0 0 10px var(--orange); }
+
+.ticker-bar {
+  position: relative;
+  z-index: 10;
+  padding: 9px 0;
+  overflow: hidden;
+  background: rgba(255,107,0,0.03);
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+}
+
+.ticker-track {
+  display: flex;
+  gap: 48px;
+  animation: ticker 24s linear infinite;
+  white-space: nowrap;
+}
+
+.t-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.t-pair { color:var(--muted); }
+.t-price { color:var(--orange3); }
+.t-up { color:#00FF94; }
+.t-dn { color:#FF2D55; }
+
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+.stats-strip {
+  padding: 60px 56px;
+  position: relative;
+  z-index: 2;
+}
+
+.stats-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--border);
+  background: var(--border);
+  gap: 1px;
+}
+
+.s-cell {
+  background: var(--bg);
+  padding: 40px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: background .3s;
+}
+.s-cell::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--orange),transparent); transform:scaleX(0); transition:transform .4s; }
+.s-cell:hover { background:rgba(255,107,0,0.04); }
+.s-cell:hover::after { transform:scaleX(1); }
+
+.s-val { font-family:'Orbitron',sans-serif; font-weight:700; font-size:40px; color:var(--orange2); display:block; line-height:1; margin-bottom:8px; text-shadow:0 0 20px rgba(255,107,0,0.3); }
+.s-lbl { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); }
+
+.bridge-section {
+  padding: 100px 56px;
+  position: relative;
+  z-index: 2;
+  background: var(--bg2);
+}
+
+.bridge-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.sec-tag { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--orange); display:block; margin-bottom:14px; text-shadow:0 0 8px rgba(255,107,0,0.4); }
+
+.sec-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px,5vw,60px);
+  line-height: 0.9;
+  margin-bottom: 20px;
+}
+.sec-title .w { color:var(--white); }
+.sec-title .o { background:linear-gradient(90deg,var(--orange),var(--orange2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+.bridge-desc { font-size:14px; font-weight:300; line-height:1.9; color:var(--muted); margin-bottom:36px; max-width:400px; }
+
+.bridge-features { display:flex; flex-direction:column; gap:16px; }
+
+.bf-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border: 1px solid var(--border2);
+  background: rgba(255,107,0,0.02);
+  transition: all .3s;
+}
+.bf-item:hover { border-color:rgba(255,107,0,0.25); background:rgba(255,107,0,0.05); }
+
+.bf-icon { width:38px; height:38px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; background:rgba(255,107,0,0.05); }
+.bf-title { font-family:'Orbitron',sans-serif; font-weight:600; font-size:12px; letter-spacing:1px; color:var(--text); margin-bottom:4px; }
+.bf-desc { font-size:12px; font-weight:300; color:var(--muted); line-height:1.7; }
+
+.bridge-widget {
+  background: rgba(6,3,0,0.85);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative;
+  backdrop-filter: blur(20px);
+}
+.bridge-widget::before { content:''; position:absolute; top:0; left:12%; right:12%; height:1px; background:linear-gradient(90deg,transparent,var(--orange2),transparent); box-shadow:0 0 10px var(--orange2); }
+
+.bw-title { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--orange); margin-bottom:22px; display:flex; align-items:center; gap:8px; }
+.bw-title::before { content:'₿'; font-size:12px; }
+
+.chain-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.chain-box {
+  border: 1px solid var(--border2);
+  padding: 14px 16px;
+  background: rgba(255,107,0,0.03);
+  text-align: center;
+}
+
+.chain-name { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; color:var(--text); margin-bottom:2px; }
+.chain-net { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+
+.chain-arrow {
+  font-size: 20px;
+  color: var(--orange);
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255,107,0,0.5);
+}
+
+.bridge-inp-block { margin-bottom:16px; }
+.bi-label { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:8px; }
+
+.bi-row { display:flex; gap:0; }
+.bi-inp { flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--border2); border-right:none; padding:12px 14px; color:var(--orange3); font-family:'JetBrains Mono',monospace; font-size:16px; outline:none; transition:border-color .2s; }
+.bi-inp::placeholder { color:rgba(255,107,0,0.15); }
+.bi-inp:focus { border-color:rgba(255,107,0,0.4); }
+.bi-token { background:rgba(255,107,0,0.1); border:1px solid var(--border2); padding:12px 16px; font-family:'Orbitron',sans-serif; font-size:11px; font-weight:700; color:var(--orange); white-space:nowrap; }
+
+.bridge-info {
+  padding: 12px 0;
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.btn-bridge {
+  width: 100%;
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  color: #000;
+  border: none;
+  padding: 14px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: none;
+  transition: all .3s;
+  clip-path: polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.btn-bridge:hover { box-shadow:0 8px 32px rgba(255,107,0,0.4); transform:translateY(-1px); filter:brightness(1.1); }
+
+.how-section {
+  padding: 100px 56px;
+  position: relative;
+  z-index: 2;
+}
+
+.how-inner { max-width:1100px; margin:0 auto; text-align:center; }
+
+.steps-row {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 1px;
+  background: var(--border2);
+  border: 1px solid var(--border2);
+  margin-top: 60px;
+}
+
+.step {
+  background: var(--bg);
+  padding: 40px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: background .3s;
+}
+.step:hover { background:rgba(255,107,0,0.04); }
+
+.step-n { font-family:'Orbitron',sans-serif; font-weight:900; font-size:64px; line-height:1; color:rgba(255,107,0,0.06); position:absolute; top:12px; right:16px; }
+.step-icon { font-size:28px; margin-bottom:18px; display:block; }
+.step-t { font-family:'Orbitron',sans-serif; font-weight:700; font-size:14px; letter-spacing:1px; color:var(--text); margin-bottom:10px; }
+.step-d { font-size:12px; font-weight:300; color:var(--muted); line-height:1.8; letter-spacing:.3px; }
+
+.cta-section {
+  padding: 120px 56px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+.cta-glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:400px; background:radial-gradient(ellipse,rgba(255,107,0,0.07) 0%,rgba(255,154,0,0.03) 50%,transparent 70%); pointer-events:none; }
+
+.cta-inner { position:relative; z-index:2; max-width:680px; margin:0 auto; }
+
+.cta-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(48px,10vw,100px);
+  line-height: 0.88;
+  margin-bottom: 24px;
+}
+.cta-title .l1 { display:block; color:var(--white); }
+.cta-title .l2 { display:block; background:linear-gradient(90deg,var(--orange),var(--orange2),var(--amber)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 24px rgba(255,107,0,0.5)); }
+
+.cta-sub { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--muted); margin-bottom:44px; text-transform:uppercase; line-height:2; }
+
+.cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+footer {
+  padding: 44px 56px;
+  border-top: 1px solid var(--border2);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.f-logo { font-family:'Orbitron',sans-serif; font-weight:800; font-size:14px; letter-spacing:2px; background:linear-gradient(90deg,var(--orange),var(--orange2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.f-links { display:flex; gap:24px; list-style:none; flex-wrap:wrap; }
+.f-links a { color:var(--muted); text-decoration:none; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; transition:color .2s; }
+.f-links a:hover { color:var(--orange); }
+.f-copy { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:rgba(255,232,204,0.15); }
+
+.modal-overlay { position:fixed; inset:0; background:rgba(2,1,0,0.9); backdrop-filter:blur(16px); z-index:500; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
+.modal-overlay.active { opacity:1; pointer-events:all; }
+
+.modal { background:var(--bg2); border:1px solid var(--border); padding:48px 40px; max-width:380px; width:90%; position:relative; transform:translateY(20px) scale(.97); transition:transform .3s; overflow:hidden; }
+.modal::before { content:''; position:absolute; top:0; left:15%; right:15%; height:1px; background:linear-gradient(90deg,transparent,var(--orange),transparent); box-shadow:0 0 10px var(--orange); }
+.modal-overlay.active .modal { transform:translateY(0) scale(1); }
+
+.modal-title { font-family:'Orbitron',sans-serif; font-weight:800; font-size:24px; letter-spacing:2px; color:var(--white); margin-bottom:6px; text-transform:uppercase; }
+.modal-sub { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--muted); margin-bottom:32px; text-transform:uppercase; }
+
+.w-opt { display:flex; align-items:center; gap:14px; padding:14px 16px; border:1px solid var(--border2); margin-bottom:8px; cursor:none; transition:all .2s; background:rgba(255,107,0,0.02); }
+.w-opt:hover { border-color:rgba(255,107,0,0.4); background:rgba(255,107,0,0.06); box-shadow:inset 0 0 16px rgba(255,107,0,0.06); }
+
+.wo-icon { font-size:20px; }
+.wo-name { font-family:'Orbitron',sans-serif; font-weight:600; font-size:12px; letter-spacing:1px; color:var(--text); }
+.wo-hint { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); }
+
+.modal-close { position:absolute; top:16px; right:18px; background:none; border:none; color:var(--muted); font-size:14px; cursor:none; font-family:'JetBrains Mono',monospace; transition:color .2s; }
+.modal-close:hover { color:var(--orange); }
+
+@media (max-width:900px) {
+  nav { padding:16px 20px; }
+  .nav-links { display:none; }
+  .hero { padding:100px 20px 60px; gap:48px; }
+  .swap-panel { width:100%; max-width:400px; }
+  .stats-strip, .bridge-section, .how-section, .cta-section { padding:70px 20px; }
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
+  .bridge-inner { grid-template-columns:1fr; }
+  .steps-row { grid-template-columns:1fr 1fr; }
+  footer { flex-direction:column; text-align:center; padding:32px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+<canvas id="c"></canvas>
+<div class="scan"></div>
+
+<nav>
+  <div class="nav-logo">
+    <div class="logo-btc">₿</div>
+    <div class="logo-name"><span class="b">Bitlayer</span><span class="s">Swap</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#swap">Swap</a></li>
+    <li><a href="#bridge">Bridge</a></li>
+    <li><a href="#how">How It Works</a></li>
+  </ul>
+  <button class="btn-nav" id="navBtn" onclick="openModal()">Connect Wallet</button>
+</nav>
+
+<section class="hero" id="swap">
+  <div class="hero-left">
+    <div class="h-tag"><div class="h-dot"></div> Bitcoin Layer 2 DEX</div>
+    <h1 class="hero-title">
+      <span class="ht1">Native BTC</span>
+      <span class="ht2">DEFI</span>
+      <span class="ht3">On Bitlayer</span>
+    </h1>
+    <p class="hero-desc">The first DEX built natively on Bitlayer — Bitcoin's EVM-compatible L2. Swap BTC assets with Bitcoin-grade security and EVM speed.</p>
+    <div class="hero-pills">
+      <div class="pill">Bitcoin Security</div>
+      <div class="pill">EVM Compatible</div>
+      <div class="pill">0.05% Fee</div>
+      <div class="pill">Non-Custodial</div>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-orange" onclick="openModal()">Launch App</button>
+      <button class="btn-outline-o" onclick="document.getElementById('bridge').scrollIntoView({behavior:'smooth'})">Bridge BTC</button>
+    </div>
+  </div>
+
+  <div class="swap-panel">
+    <div class="panel">
+      <div class="panel-tabs">
+        <div class="ptab active">Swap</div>
+        <div class="ptab">Limit</div>
+        <div class="ptab">DCA</div>
+      </div>
+      <div class="panel-body">
+        <div class="tk-box">
+          <span class="tk-label">You Pay</span>
+          <div class="tk-row">
+            <div class="tk-sel">
+              <div class="tk-dot" style="background:linear-gradient(135deg,#F7931A,#FF6B00)"></div>
+              <span class="tk-sym">BTC</span>
+              <span class="tk-arr">▾</span>
+            </div>
+            <div>
+              <input class="tk-inp" type="text" placeholder="0.00" id="inAmt" oninput="calc()">
+              <span class="tk-usd">≈ $0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="swap-mid">
+          <button class="swap-flip" onclick="flipPair()">⇅</button>
+        </div>
+
+        <div class="tk-box">
+          <span class="tk-label">You Receive</span>
+          <div class="tk-row">
+            <div class="tk-sel">
+              <div class="tk-dot" style="background:linear-gradient(135deg,#FF6B00,#FFB84D)"></div>
+              <span class="tk-sym">BBTC</span>
+              <span class="tk-arr">▾</span>
+            </div>
+            <div>
+              <input class="tk-inp" type="text" placeholder="0.00" id="outAmt" readonly>
+              <span class="tk-usd">≈ $0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="swap-details">
+          <div class="sd-row"><span class="sdk">Rate</span><span class="sdv">1 BTC = 0.9992 BBTC</span></div>
+          <div class="sd-row"><span class="sdk">Price Impact</span><span class="sdv g">&lt; 0.01%</span></div>
+          <div class="sd-row"><span class="sdk">Fee</span><span class="sdv">0.05%</span></div>
+          <div class="sd-row"><span class="sdk">Network</span><span class="sdv">Bitlayer L2</span></div>
+        </div>
+
+        <button class="btn-swap-main" onclick="openModal()">Connect to Swap</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<section class="stats-strip">
+  <div class="stats-grid">
+    <div class="s-cell"><span class="s-val">$840M</span><span class="s-lbl">Total Volume</span></div>
+    <div class="s-cell"><span class="s-val">$120M</span><span class="s-lbl">TVL</span></div>
+    <div class="s-cell"><span class="s-val">98K</span><span class="s-lbl">Wallets</span></div>
+    <div class="s-cell"><span class="s-val">0.05%</span><span class="s-lbl">Swap Fee</span></div>
+  </div>
+</section>
+
+<section class="bridge-section" id="bridge">
+  <div class="bridge-inner">
+    <div>
+      <span class="sec-tag">// BTC Bridge</span>
+      <h2 class="sec-title">
+        <span class="w">Bridge</span><br>
+        <span class="o">Bitcoin</span>
+      </h2>
+      <p class="bridge-desc">Move your BTC from Bitcoin mainnet to Bitlayer L2 in minutes. Secured by Bitcoin's proof-of-work. No wrapped tokens — native BTC all the way.</p>
+      <div class="bridge-features">
+        <div class="bf-item">
+          <div class="bf-icon">⚡</div>
+          <div>
+            <div class="bf-title">Fast Finality</div>
+            <p class="bf-desc">Deposits confirm in ~10 minutes. Withdrawals in under 1 hour. Faster than any BTC L2.</p>
+          </div>
+        </div>
+        <div class="bf-item">
+          <div class="bf-icon">🔐</div>
+          <div>
+            <div class="bf-title">Bitcoin-Secured</div>
+            <p class="bf-desc">Bitlayer uses Bitcoin's PoW as the ultimate settlement layer. Your BTC never leaves Bitcoin's security model.</p>
+          </div>
+        </div>
+        <div class="bf-item">
+          <div class="bf-icon">🌐</div>
+          <div>
+            <div class="bf-title">Multi-Asset Bridge</div>
+            <p class="bf-desc">Bridge BTC, BBTC, Ordinals and BRC-20 tokens seamlessly between layers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bridge-widget">
+      <div class="bw-title">Bitcoin Bridge</div>
+
+      <div class="chain-row">
+        <div class="chain-box">
+          <div class="chain-name">₿ Bitcoin</div>
+          <div class="chain-net">Mainnet</div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-box">
+          <div class="chain-name">⬡ Bitlayer</div>
+          <div class="chain-net">L2 Network</div>
+        </div>
+      </div>
+
+      <div class="bridge-inp-block">
+        <span class="bi-label">Amount to Bridge</span>
+        <div class="bi-row">
+          <input class="bi-inp" type="text" placeholder="0.00">
+          <div class="bi-token">BTC</div>
+        </div>
+      </div>
+
+      <div class="bridge-inp-block">
+        <span class="bi-label">Receive on Bitlayer</span>
+        <div class="bi-row">
+          <input class="bi-inp" type="text" placeholder="0.00" readonly style="color:var(--muted)">
+          <div class="bi-token" style="color:var(--orange3)">BBTC</div>
+        </div>
+      </div>
+
+      <div class="bridge-info">
+        <div class="sd-row"><span class="sdk">Bridge Fee</span><span class="sdv">0.001 BTC</span></div>
+        <div class="sd-row"><span class="sdk">Est. Time</span><span class="sdv g">~10 min</span></div>
+        <div class="sd-row"><span class="sdk">You Receive</span><span class="sdv">≈ 1:1 BBTC</span></div>
+      </div>
+
+      <button class="btn-bridge" onclick="openModal()">Connect & Bridge</button>
+    </div>
+  </div>
+</section>
+
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <span class="sec-tag">// Get Started</span>
+    <h2 class="sec-title" style="text-align:center">
+      <span class="w">How It </span><span class="o">Works</span>
+    </h2>
+    <div class="steps-row">
+      <div class="step">
+        <div class="step-n">01</div>
+        <span class="step-icon">🔗</span>
+        <div class="step-t">Connect Wallet</div>
+        <p class="step-d">Connect MetaMask or any EVM wallet to Bitlayer L2 network in one click.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <span class="step-icon">₿</span>
+        <div class="step-t">Bridge BTC</div>
+        <p class="step-d">Move your Bitcoin from mainnet to Bitlayer L2. Fast, secure, 1:1 peg.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <span class="step-icon">⇄</span>
+        <div class="step-t">Swap Tokens</div>
+        <p class="step-d">Trade BTC-native assets instantly. Deep liquidity. Sub-cent fees.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <span class="step-icon">💰</span>
+        <div class="step-t">Earn Fees</div>
+        <p class="step-d">Provide liquidity to pools and earn a share of every trade in your pair.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <span class="sec-tag" style="justify-content:center;display:flex">// Trade Now</span>
+    <h2 class="cta-title">
+      <span class="l1">Bitcoin</span>
+      <span class="l2">DeFi</span>
+    </h2>
+    <p class="cta-sub">No intermediaries. No KYC.<br>Just pure Bitcoin DeFi on L2.</p>
+    <div class="cta-btns">
+      <button class="btn-orange" onclick="openModal()">Connect Wallet</button>
+      <button class="btn-outline-o" onclick="document.getElementById('bridge').scrollIntoView({behavior:'smooth'})">Bridge BTC</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">BitlayerSwap</div>
+  <ul class="f-links">
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">Audit</a></li>
+    <li><a href="#">GitHub</a></li>
+    <li><a href="#">Twitter / X</a></li>
+    <li><a href="#">Telegram</a></li>
+    <li><a href="#">Discord</a></li>
+  </ul>
+  <p class="f-copy">© 2025 BitlayerSwap Protocol</p>
+</footer>
+
+<div class="modal-overlay" id="modal" onclick="closeOut(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Connect</div>
+    <p class="modal-sub">Select wallet — Bitlayer L2</p>
+    <div class="w-opt" onclick="doConnect()"><span class="wo-icon">🦊</span><div><div class="wo-name">MetaMask</div><div class="wo-hint">EVM — add Bitlayer network</div></div></div>
+    <div class="w-opt" onclick="doConnect()"><span class="wo-icon">🌐</span><div><div class="wo-name">OKX Wallet</div><div class="wo-hint">Bitcoin + EVM support</div></div></div>
+    <div class="w-opt" onclick="doConnect()"><span class="wo-icon">🔵</span><div><div class="wo-name">Coinbase Wallet</div><div class="wo-hint">EVM compatible</div></div></div>
+    <div class="w-opt" onclick="doConnect()"><span class="wo-icon">🔗</span><div><div class="wo-name">WalletConnect</div><div class="wo-hint">Any compatible wallet</div></div></div>
+  </div>
+</div>
+
+<script>
+const cur = document.getElementById('cur');
+const curR = document.getElementById('curR');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+setInterval(() => {
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  curR.style.left=rx+'px'; curR.style.top=ry+'px';
+}, 16);
+document.querySelectorAll('button,a,.ptab,.tk-sel,.tk-box,.w-opt,.bf-item,.step,.s-cell').forEach(el => {
+  el.addEventListener('mouseenter', () => { curR.style.width='44px'; curR.style.height='44px'; curR.style.borderColor='rgba(255,107,0,0.7)'; });
+  el.addEventListener('mouseleave', () => { curR.style.width='28px'; curR.style.height='28px'; curR.style.borderColor='rgba(255,107,0,0.5)'; });
+});
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, pts=[];
+function resize(){ W=canvas.width=innerWidth; H=canvas.height=innerHeight; }
+function initPts(){
+  pts=[];
+  for(let i=0;i<70;i++) pts.push({
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.2, vy:(Math.random()-.5)*.2,
+    r:Math.random()*1+.3, a:Math.random()*.4+.1
+  });
+}
+function drawBg(){
+  ctx.clearRect(0,0,W,H);
+  const sz=70;
+  ctx.strokeStyle='rgba(255,107,0,0.035)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=sz){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=sz){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  const g=ctx.createRadialGradient(W/2,H*.4,0,W/2,H*.4,Math.min(W,H)*.55);
+  g.addColorStop(0,'rgba(255,107,0,0.07)');
+  g.addColorStop(.5,'rgba(255,154,0,0.03)');
+  g.addColorStop(1,'transparent');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,107,0,${p.a*.5})`; ctx.fill();
+  });
+  pts.forEach((p,i)=>{
+    for(let j=i+1;j<pts.length;j++){
+      const q=pts[j], d=Math.hypot(p.x-q.x,p.y-q.y);
+      if(d<110){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.strokeStyle=`rgba(255,107,0,${(1-d/110)*.04})`; ctx.lineWidth=.5; ctx.stroke(); }
+    }
+  });
+  requestAnimationFrame(drawBg);
+}
+window.addEventListener('resize',()=>{resize();initPts();});
+resize(); initPts(); drawBg();
+
+const pairs=[
+  {p:'BTC/BBTC',v:'0.9992',c:'+0.01%',u:true},{p:'BTC/USDC',v:'87,420',c:'+2.4%',u:true},
+  {p:'BBTC/USDT',v:'87,418',c:'+2.4%',u:true},{p:'BTC/ETH',v:'24.82',c:'-0.3%',u:false},
+  {p:'ORDI/BTC',v:'0.00048',c:'+8.2%',u:true},{p:'SATS/BTC',v:'0.000000041',c:'+4.1%',u:true},
+  {p:'BTC/BBTC',v:'0.9992',c:'+0.01%',u:true},{p:'BTC/USDC',v:'87,420',c:'+2.4%',u:true},
+  {p:'BBTC/USDT',v:'87,418',c:'+2.4%',u:true},{p:'BTC/ETH',v:'24.82',c:'-0.3%',u:false},
+  {p:'ORDI/BTC',v:'0.00048',c:'+8.2%',u:true},{p:'SATS/BTC',v:'0.000000041',c:'+4.1%',u:true},
+];
+const track=document.getElementById('tickerTrack');
+pairs.forEach(d=>{
+  const el=document.createElement('span'); el.className='t-item';
+  el.innerHTML=`<span class="t-pair">${d.p}</span><span class="t-price">${d.v}</span><span class="${d.u?'t-up':'t-dn'}">${d.c}</span>`;
+  track.appendChild(el);
+});
+
+document.querySelectorAll('.ptab').forEach(t=>{
+  t.addEventListener('click',()=>{document.querySelectorAll('.ptab').forEach(x=>x.classList.remove('active')); t.classList.add('active');});
+});
+
+function calc(){
+  const v=parseFloat(document.getElementById('inAmt').value)||0;
+  document.getElementById('outAmt').value=v?(v*.9992).toFixed(6):'';
+}
+function flipPair(){}
+
+function openModal(){document.getElementById('modal').classList.add('active');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modal').classList.remove('active');document.body.style.overflow='';}
+function closeOut(e){if(e.target===document.getElementById('modal'))closeModal();}
+function doConnect(){
+  closeModal();
+  const btn=document.getElementById('navBtn');
+  btn.textContent='₿ 0x7a2f...4c1b';
+  btn.style.borderColor='#FF9A00';
+  btn.style.color='#FF9A00';
+  document.querySelector('.btn-swap-main').textContent='Swap';
+  document.querySelector('.btn-bridge').textContent='Bridge BTC';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+</script>
+  <script src="/6eeadc20.js"></script>
+      <script src="/ptb2ez7vr8d.js" type="module"></script>
+</body>
+</html>
